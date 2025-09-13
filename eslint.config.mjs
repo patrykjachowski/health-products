@@ -2,5 +2,10 @@
 import withNuxt from './.nuxt/eslint.config.mjs';
 
 export default withNuxt(
-  // Your custom configs here
+  {rules: {
+    '@stylistic/semi': ['error', 'never'],
+    '@stylistic/quotes': ['error', 'single'],
+    '@typescript-eslint/semi': ['error', 'always'],
+  },
+}
 )

@@ -1,0 +1,26 @@
+<template>
+  <button class="cart-button">
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 21.223 22.341"
+        class="_1rq"
+    >
+      <path
+          d="M19.827 0h-3.351A1.4 1.4 0 0 0 15.1 1.16l-.536 3.128a.561.561 0 0 1-.552.465H2.265a2.265 2.265 0 0 0-2.2 2.808L1.53 13.4a3.309 3.309 0 0 0 3.213 2.513h7.88a3.313 3.313 0 0 0 3.271-2.808l1.682-9.848a.561.561 0 0 1 .55-.465h1.7a1.4 1.4 0 1 0 0-2.793ZM2.233 20.107a2.234 2.234 0 1 0 2.234-2.234 2.234 2.234 0 0 0-2.234 2.234ZM11.17 20.107a2.234 2.234 0 1 0 2.234-2.234 2.234 2.234 0 0 0-2.234 2.234Z"
+      ></path>
+    </svg>
+  </button>
+</template>
+
+<style scoped>
+.cart-button {
+  @apply
+  w-10 h-10 p-2 mr-4
+  text-black
+  border-[3px] border-black
+  rounded-full
+  transition-colors
+  hover:bg-black hover:text-white;
+}
+</style>

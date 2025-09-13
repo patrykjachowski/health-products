@@ -1,0 +1,25 @@
+html, body {
+  background-color: #F7F7F5;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .product-list-item {
+    background-color: white;
+    border-radius: 0.75rem;
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr auto;
+    gap: 1rem;
+    padding: 1rem;
+    color: #6B7280;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    transition: box-shadow 0.3s ease;
+  }
+
+  /*.product-list-item:hover {*/
+  /*  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);*/
+  /*}*/
+}
