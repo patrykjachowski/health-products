@@ -6,14 +6,19 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxtjs/tailwindcss',
   ],
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/icons',
+      prefix: 'Icon',
+    },
+  ],
   devtools: { enabled: true },
   css: ['@/assets/css/main.css'],
   compatibilityDate: '2025-07-15',
-  image: {
-    prismic: {
-      baseURL: 'https://images.prismic.io',
-    },
-  },
   eslint: {
     config: {
       stylistic: {
@@ -24,14 +29,9 @@ export default defineNuxtConfig({
       },
     },
   },
-  components: [
-    {
-      path: '~/components',
-      pathPrefix: false,
+  image: {
+    prismic: {
+      baseURL: 'https://images.prismic.io',
     },
-    {
-      path: '~/components/icons',
-      prefix: 'Icon'
-    }
-  ]
+  },
 })

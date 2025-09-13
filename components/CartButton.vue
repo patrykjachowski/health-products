@@ -16,7 +16,7 @@
 <style scoped>
 .cart-button {
   @apply
-  w-10 h-10 p-2 mr-4
+  w-10 h-10 p-2 sm:mr-4
   text-black
   border-[3px] border-black
   rounded-full

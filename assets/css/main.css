@@ -1,5 +1,6 @@
-html, body {
-  background-color: #F7F7F5;
+html,
+body {
+  background-color: #f7f7f5;
 }
 
 @tailwind base;
@@ -8,18 +9,6 @@ html, body {
 
 @layer components {
   .product-list-item {
-    background-color: white;
-    border-radius: 0.75rem;
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr auto;
-    gap: 1rem;
-    padding: 1rem;
-    color: #6B7280;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    transition: box-shadow 0.3s ease;
+    @apply grid grid-cols-[1fr_auto] gap-4 rounded-xl bg-white p-4 text-gray-500 shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md sm:grid-cols-[2fr_1fr_1fr_1fr_auto] md:grid-cols-[2fr_1fr_1fr_1fr_auto];
   }
-
-  /*.product-list-item:hover {*/
-  /*  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);*/
-  /*}*/
 }

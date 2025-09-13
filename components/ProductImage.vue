@@ -1,11 +1,11 @@
 <template>
-  <div class="image-zoom-container">
+  <div class="image-zoom-container mr-4 sm:mr-8">
     <NuxtImg
         provider="prismic"
         :src="image"
         alt="Product image"
         loading="lazy"
-        class="zoomed-image"
+        class="zoomed-image w-24 h-36 sm:w-16 sm:h-16"
     />
   </div>
 </template>
@@ -20,14 +20,11 @@ defineProps<{
 .image-zoom-container {
   overflow: hidden;
   border-radius: 0.375rem;
-  margin-right: 2rem;
 }
 
 .zoomed-image {
   transform: scale(1.4);
   transform-origin: top;
-  width: 80px;
-  height: 80px;
   object-fit: cover;
 }
 </style>
