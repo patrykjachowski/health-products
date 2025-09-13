@@ -1,4 +1,8 @@
 <template>
+  <h2 class="text-2xl mt-8 mb-2">
+    {{ title }}
+  </h2>
+  <ProductsHeader />
   <ul class="space-y-2 list-none">
     <ProductListItem
       v-for="product in products"
@@ -12,5 +16,8 @@
 </template>
 
 <script setup lang="ts">
-const products = await $fetch('/api/product/products')
+defineProps<{
+  products: Product[]
+  title?: string
+}>()
 </script>

@@ -8,10 +8,12 @@ export default defineEventHandler(async (): Promise<Product[]> => {
 
   return magentoProducts
     .map((magentoProduct) => {
-      const cmsProduct = cmsProducts.find(cms => magentoProduct.sku.includes(cms.sku))
-      return cmsProduct
+      const matchedCmsProduct = cmsProducts.find(cms => magentoProduct.sku.includes(cms.sku))
+      const inStock = magentoProduct.stock_status === 'IN_STOCK'
+
+      return matchedCmsProduct && inStock
         ? {
-            ...cmsProduct,
+            ...matchedCmsProduct,
             ...magentoProduct,
             special: magentoProduct.sku.endsWith('_dm'),
           }
