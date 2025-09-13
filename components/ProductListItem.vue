@@ -5,7 +5,7 @@
     class="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 rounded-xl bg-white p-4 text-gray-500 shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md"
   >
     <div class="flex sm:items-center">
-      <ProductImage :image="image" />
+      <ProductImage :image="img" />
 
       <div class="flex flex-col sm:flex-row justify-between">
         <div>
@@ -37,8 +37,8 @@
     </div>
 
     <div class="flex sm:items-center">
-      <CartButton
-        :state="cartState"
+      <AddProductButton
+        :state="addProductButtonState"
         @click="addToCart"
       />
     </div>
@@ -48,36 +48,36 @@
 <script setup lang="ts">
 import ProductImage from '~/components/ProductImage.vue'
 import { useFormatCurrency } from '~/utils/use-format-currency'
+import { useCartStore } from '~/stores/cart'
+import type { Product } from '~/types/product'
 
-const props = defineProps<{
-  name: string
-  price: number
-  amount: number
-  image: string
-  sku: string
-}>()
+const props = defineProps<Product & { amount: number }>()
 
 const formatCurrency = (value: number) => useFormatCurrency(value)
 const summarizedPrice = formatCurrency(props.price * props.amount)
 
-const cartState = ref<'default' | 'loading' | 'success'>('default')
+const cartStore = useCartStore()
+const addProductButtonState = ref<'default' | 'loading' | 'success'>('default')
 
 const addToCart = async () => {
+  const product = computed(() => ({
+    id: props.sku,
+    name: props.name,
+    price: props.price,
+    amount: props.amount,
+    sku: props.sku,
+  }))
+
   try {
-    cartState.value = 'loading'
+    addProductButtonState.value = 'loading'
 
     await $fetch('/api/cart/add', {
       method: 'POST',
-      body: {
-        id: props.sku,
-        name: props.name,
-        price: props.price,
-        amount: props.amount,
-        sku: props.sku,
-      },
+      body: product.value,
     })
 
-    cartState.value = 'success'
+    addProductButtonState.value = 'success'
+    cartStore.addToCart(product.value)
 
     console.log('Product added to cart successfully', props.name)
   }

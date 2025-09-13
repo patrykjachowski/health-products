@@ -7,11 +7,8 @@
     <ProductListItem
       v-for="product in products"
       :key="product.id"
-      :name="product.name"
-      :price="product.price"
+      v-bind="product"
       :amount="1"
-      :image="product.img"
-      :sku="product.sku"
     />
   </ul>
 </template>
