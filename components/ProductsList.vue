@@ -11,11 +11,14 @@
       :price="product.price"
       :amount="1"
       :image="product.img"
+      :sku="product.sku"
     />
   </ul>
 </template>
 
 <script setup lang="ts">
+import type { Product } from '~/types/product'
+
 defineProps<{
   products: Product[]
   title?: string

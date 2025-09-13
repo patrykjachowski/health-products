@@ -35,8 +35,12 @@
     <div class="hidden sm:flex items-center text-black font-bold">
       {{ summarizedPrice }}
     </div>
+
     <div class="flex sm:items-center">
-      <CartButton />
+      <CartButton
+        :state="cartState"
+        @click="addToCart"
+      />
     </div>
   </li>
 </template>
@@ -50,8 +54,35 @@ const props = defineProps<{
   price: number
   amount: number
   image: string
+  sku: string
 }>()
 
 const formatCurrency = (value: number) => useFormatCurrency(value)
 const summarizedPrice = formatCurrency(props.price * props.amount)
+
+const cartState = ref<'default' | 'loading' | 'success'>('default')
+
+const addToCart = async () => {
+  try {
+    cartState.value = 'loading'
+
+    await $fetch('/api/cart/add', {
+      method: 'POST',
+      body: {
+        id: props.sku,
+        name: props.name,
+        price: props.price,
+        amount: props.amount,
+        sku: props.sku,
+      },
+    })
+
+    cartState.value = 'success'
+
+    console.log('Product added to cart successfully', props.name)
+  }
+  catch (error) {
+    console.error('Error adding product to cart:', error)
+  }
+}
 </script>
