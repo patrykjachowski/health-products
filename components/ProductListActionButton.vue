@@ -6,21 +6,9 @@
     @click="$emit('click')"
   >
     <Icon
-      v-if="state === 'default'"
-      name="majesticons:shopping-cart"
-      size="20"
-      class="scale-x-[-1]"
-    />
-    <Icon
-      v-if="state === 'loading'"
-      name="svg-spinners:270-ring-with-bg"
-      size="20"
-      class="pb-1"
-    />
-    <Icon
-      v-if="state === 'success'"
-      name="material-symbols:check-rounded"
-      size="24"
+      :name="iconConfig.name"
+      :size="iconConfig.size"
+      :class="iconConfig.class"
     />
   </button>
 </template>
@@ -35,6 +23,28 @@ defineEmits<{
 }>()
 
 const isDisabled = computed(() => ['loading', 'success'].includes(props.state))
+const iconConfig = computed(() => {
+  switch (props.state) {
+    case 'loading':
+      return {
+        name: 'svg-spinners:270-ring-with-bg',
+        size: '20',
+        class: 'pb-1',
+      }
+    case 'success':
+      return {
+        name: 'material-symbols:check-rounded',
+        size: '24',
+        class: '',
+      }
+    default:
+      return {
+        name: 'majesticons:shopping-cart',
+        size: '20',
+        class: 'scale-x-[-1]',
+      }
+  }
+})
 </script>
 
 <style scoped>
@@ -55,7 +65,8 @@ const isDisabled = computed(() => ['loading', 'success'].includes(props.state))
   }
 }
 
-.cart-button:hover, .cart-button-success {
+.cart-button:hover,
+.cart-button-success {
   background-color: black;
   color: white;
 }

@@ -4,6 +4,7 @@
       v-if="products.length"
       :products="products"
       title="Special Products"
+      mode="cart"
     />
     <div
       v-else

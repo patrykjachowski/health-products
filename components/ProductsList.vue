@@ -1,18 +1,21 @@
 <template>
-  <h2 class="text-2xl mt-8 mb-2">
+  <h2 class="text-2xl text-center font-bold mt-8 mb-4">
     {{ title }}
   </h2>
   <div v-if="isLoading">
+    <!--    TODO: Make a skeleton loading component -->
     LOADING
   </div>
-  <div v-else>
+  <div
+    v-else
+    class="mb-20"
+  >
     <ProductsHeader />
     <ul class="space-y-2 list-none">
       <ProductListItem
         v-for="product in products"
-        :key="product.id"
         v-bind="product"
-        :amount="1"
+        :key="product.id"
       />
     </ul>
   </div>
@@ -25,5 +28,6 @@ defineProps<{
   products: Product[]
   isLoading?: boolean
   title?: string
+  mode?: 'cart' | undefined
 }>()
 </script>

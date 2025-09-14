@@ -26,8 +26,8 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const navigation = computed(() => [
-  { name: 'Product list', href: '/', current: route.path === '/' },
-  { name: 'Cart', href: '/cart', current: route.path === '/cart' },
+  { name: 'Lista produktów', href: '/', current: route.path === '/' },
+  { name: 'Koszyk', href: '/cart', current: route.path === '/cart' },
 ])
 
 const getNavItemClass = computed(() => {

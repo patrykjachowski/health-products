@@ -4,12 +4,12 @@
       <ProductsList
         :products="specialProducts"
         :is-loading="pending"
-        title="Special Products"
+        title="Poznaj nasze specjalne oferty"
       />
       <ProductsList
         :products="originalProducts"
         :is-loading="pending"
-        title="Original Products"
+        title="Poznaj nasze bestsellery"
       />
     </div>
   </div>

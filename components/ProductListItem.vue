@@ -37,7 +37,7 @@
     </div>
 
     <div class="flex sm:items-center">
-      <AddProductButton
+      <ProductListActionButton
         :state="addProductButtonState"
         @click="addToCart"
       />
@@ -50,9 +50,12 @@ import ProductImage from '~/components/ProductImage.vue'
 import { useFormatCurrency } from '~/utils/use-format-currency'
 import { useCartStore } from '~/stores/cart'
 import type { Product } from '~/types/product'
+import ProductListActionButton from '~/components/ProductListActionButton.vue'
 
-const props = defineProps<Product & { amount: number }>()
-
+const props = withDefaults(
+  defineProps<Product & { amount?: number }>(), {
+    amount: 1,
+  })
 const formatCurrency = (value: number) => useFormatCurrency(value)
 const summarizedPrice = formatCurrency(props.price * props.amount)
 
@@ -60,13 +63,7 @@ const cartStore = useCartStore()
 const addProductButtonState = ref<'default' | 'loading' | 'success'>('default')
 
 const addToCart = async () => {
-  const product = computed(() => ({
-    id: props.sku,
-    name: props.name,
-    price: props.price,
-    amount: props.amount,
-    sku: props.sku,
-  }))
+  const product = computed(() => ({ ...props }))
 
   try {
     addProductButtonState.value = 'loading'
