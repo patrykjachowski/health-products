@@ -38,8 +38,8 @@
 
     <div class="flex sm:items-center">
       <ProductListActionButton
-        :state="addProductButtonState"
-        @click="addToCart"
+        :state="actionButtonState"
+        @click="handleAction"
       />
     </div>
   </li>
@@ -53,33 +53,65 @@ import type { Product } from '~/types/product'
 import ProductListActionButton from '~/components/ProductListActionButton.vue'
 
 const props = withDefaults(
-  defineProps<Product & { amount?: number }>(), {
+  defineProps<Product & {
+    amount?: number
+    mode?: 'default' | 'remove'
+  }>(), {
     amount: 1,
+    mode: 'default',
   })
 const formatCurrency = (value: number) => useFormatCurrency(value)
 const summarizedPrice = formatCurrency(props.price * props.amount)
 
 const cartStore = useCartStore()
-const addProductButtonState = ref<'default' | 'loading' | 'success'>('default')
+const actionButtonState = ref<'default' | 'loading' | 'success' | 'remove'>(
+  props.mode === 'remove' ? 'remove' : 'default',
+)
+
+const handleAction = () => {
+  return props.mode === 'remove' ? removeFromCart() : addToCart()
+}
 
 const addToCart = async () => {
   const product = computed(() => ({ ...props }))
 
   try {
-    addProductButtonState.value = 'loading'
+    actionButtonState.value = 'loading'
 
     await $fetch('/api/cart/add', {
       method: 'POST',
       body: product.value,
     })
 
-    addProductButtonState.value = 'success'
+    actionButtonState.value = 'success'
     cartStore.addToCart(product.value)
 
     console.log('Product added to cart successfully', props.name)
   }
   catch (error) {
     console.error('Error adding product to cart:', error)
+  }
+}
+
+const removeFromCart = async () => {
+  const product = computed(() => ({ ...props }))
+
+  try {
+    actionButtonState.value = 'loading'
+
+    await $fetch('/api/cart/remove', {
+      method: 'POST',
+      body: product.value,
+    })
+
+    actionButtonState.value = 'remove'
+
+    cartStore.removeFromCart(product.value)
+
+    console.log('Product remove from cart successfully', props.name)
+  }
+  catch (error) {
+    console.error('Error removing product from cart:', error)
   }
 }
 </script>

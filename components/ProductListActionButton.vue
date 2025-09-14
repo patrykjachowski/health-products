@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  state: 'default' | 'loading' | 'success'
+  state: 'default' | 'loading' | 'success' | 'remove'
 }>()
 
 defineEmits<{
@@ -35,7 +35,12 @@ const iconConfig = computed(() => {
       return {
         name: 'material-symbols:check-rounded',
         size: '24',
-        class: '',
+      }
+    case 'remove':
+      return {
+        name: 'solar:cart-cross-bold',
+        size: '24',
+        class: 'scale-x-[-1]',
       }
     default:
       return {

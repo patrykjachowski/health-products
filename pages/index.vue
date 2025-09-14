@@ -3,12 +3,12 @@
     <div class="p-4 sm:p-6 lg:p-8 font-sans">
       <ProductsList
         :products="specialProducts"
-        :is-loading="pending"
+        :is-pending="pending"
         title="Poznaj nasze specjalne oferty"
       />
       <ProductsList
         :products="originalProducts"
-        :is-loading="pending"
+        :is-pending="pending"
         title="Poznaj nasze bestsellery"
       />
     </div>

@@ -2,7 +2,7 @@
   <h2 class="text-2xl text-center font-bold mt-8 mb-4">
     {{ title }}
   </h2>
-  <div v-if="isLoading">
+  <div v-if="isPending">
     <!--    TODO: Make a skeleton loading component -->
     LOADING
   </div>
@@ -16,6 +16,7 @@
         v-for="product in products"
         v-bind="product"
         :key="product.id"
+        :mode="mode"
       />
     </ul>
   </div>
@@ -26,8 +27,8 @@ import type { Product } from '~/types/product'
 
 defineProps<{
   products: Product[]
-  isLoading?: boolean
+  isPending?: boolean
   title?: string
-  mode?: 'cart' | undefined
+  mode?: 'remove' | undefined
 }>()
 </script>
