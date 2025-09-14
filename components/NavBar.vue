@@ -1,16 +1,16 @@
 <template>
   <div class="border-b-2 border-gray-300">
     <div class="flex h-16 items-center justify-between">
-      <h1 class="text-xl font-bold text-gray-900">
+      <div class="text-xl font-bold text-gray-900">
         Health Products
-      </h1>
+      </div>
 
       <div class="flex space-x-4">
         <NuxtLink
           v-for="item in navigation"
           :key="item.name"
           :to="item.href"
-          :class="getNavItemClasses(item)"
+          :class="getNavItemClass(item)"
           :aria-current="item.current ? 'page' : undefined"
         >{{ item.name }}
         </NuxtLink>
@@ -30,7 +30,7 @@ const navigation = computed(() => [
   { name: 'Cart', href: '/cart', current: route.path === '/cart' },
 ])
 
-const getNavItemClasses = computed(() => {
+const getNavItemClass = computed(() => {
   return item => [
     item.current
       ? 'bg-gray-700 text-white'

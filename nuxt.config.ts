@@ -6,16 +6,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
-  ],
-  components: [
-    {
-      path: '~/components',
-      pathPrefix: false,
-    },
-    {
-      path: '~/components/icons',
-      prefix: 'Icon',
-    },
+    '@nuxt/icon',
   ],
   devtools: { enabled: true },
   css: ['@/assets/css/main.css'],

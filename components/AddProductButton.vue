@@ -1,12 +1,27 @@
 <template>
   <button
-    class="cart-button"
+    class="cart-button flex items-center justify-center"
+    :class="{ 'cart-button-success': state === 'success' }"
     :disabled="isDisabled"
     @click="$emit('click')"
   >
-    <IconCart v-if="state === 'default'" />
-    <IconSpinner v-if="state === 'loading'" />
-    <IconCheck v-if="state === 'success'" />
+    <Icon
+      v-if="state === 'default'"
+      name="majesticons:shopping-cart"
+      size="20"
+      class="scale-x-[-1]"
+    />
+    <Icon
+      v-if="state === 'loading'"
+      name="svg-spinners:270-ring-with-bg"
+      size="20"
+      class="pb-1"
+    />
+    <Icon
+      v-if="state === 'success'"
+      name="material-symbols:check-rounded"
+      size="24"
+    />
   </button>
 </template>
 
@@ -24,11 +39,24 @@ const isDisabled = computed(() => ['loading', 'success'].includes(props.state))
 
 <style scoped>
 .cart-button {
-  @apply w-10 h-10 p-2 sm:mr-4
-  text-black
-  border-[3px] border-black
-  rounded-full
-  transition-colors
-  hover:bg-black hover:text-white;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: black;
+  border: 3px solid black;
+  border-radius: 9999px;
+  transition-property: color, background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+@media (min-width: 640px) {
+  .cart-button {
+    margin-right: 1rem;
+  }
+}
+
+.cart-button:hover, .cart-button-success {
+  background-color: black;
+  color: white;
 }
 </style>
