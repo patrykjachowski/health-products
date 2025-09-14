@@ -36,7 +36,7 @@
         :disabled="isProductInCart"
         type="number"
         min="1"
-        class="w-20 px-3 py-2 text-sm hover:border hover:border-gray-300  rounded-md transition-colors duration-200 focus:outline-none focus:ring-0"
+        class="w-20 px-3 py-2 text-sm rounded-md transition-colors duration-200 focus:outline-none focus:ring-0 enabled:hover:border enabled:hover:border-gray-300"
       >
       <span v-else>
         {{ amount }}
