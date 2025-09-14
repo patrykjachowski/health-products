@@ -5,14 +5,18 @@
         Health Products
       </div>
 
-      <div class="flex space-x-4">
+      <div class="flex space-x-4 justify-end">
         <NuxtLink
           v-for="item in navigation"
           :key="item.name"
           :to="item.href"
           :class="getNavItemClass(item)"
           :aria-current="item.current ? 'page' : undefined"
-        >{{ item.name }}
+        >
+          {{ item.name }}
+          <span v-if="item.name === 'Koszyk' && cartStore.totalItems > 0">
+            ({{ cartStore.totalItems }})
+          </span>
         </NuxtLink>
       </div>
     </div>
@@ -24,6 +28,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const cartStore = useCartStore()
 
 const navigation = computed(() => [
   { name: 'Lista produktów', href: '/', current: route.path === '/' },

@@ -14,8 +14,8 @@
     <ul class="space-y-2 list-none">
       <ProductListItem
         v-for="product in products"
-        v-bind="product"
         :key="product.id"
+        :product="product"
         :product-amount="product.amount"
         :mode="mode"
       />

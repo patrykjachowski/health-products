@@ -5,15 +5,15 @@
     class="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 rounded-xl bg-white p-4 text-gray-500 shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md"
   >
     <div class="flex sm:items-center">
-      <ProductImage :image="img" />
+      <ProductImage :image="product.img" />
 
       <div class="flex flex-col sm:flex-row justify-between">
         <div>
           <h2 class="font-bold text-gray-800 text-xl">
-            {{ name }}
+            {{ product.name }}
           </h2>
           <div class="sm:hidden text-black mt-2">
-            Cena - {{ formatCurrency(price) }}
+            Cena - {{ formatCurrency(product.price) }}
           </div>
           <div class="sm:hidden text-black">
             Ilość - {{ amount }}
@@ -27,15 +27,20 @@
     </div>
 
     <div class="hidden sm:flex items-center text-black">
-      {{ formatCurrency(price) }}
+      {{ formatCurrency(product.price) }}
     </div>
     <div class="hidden sm:flex items-center text-gray-700">
       <input
+        v-if="mode !== 'remove'"
         v-model="amount"
+        :disabled="isProductInCart"
         type="number"
         min="1"
         class="w-20 px-3 py-2 text-sm hover:border hover:border-gray-300  rounded-md transition-colors duration-200 focus:outline-none focus:ring-0"
       >
+      <span v-else>
+        {{ amount }}
+      </span>
     </div>
     <div class="hidden sm:flex items-center text-black font-bold">
       {{ summarizedPrice }}
@@ -59,7 +64,8 @@ import type { Product } from '~/types/product'
 import ProductListActionButton from '~/components/ProductListActionButton.vue'
 
 const props = withDefaults(
-  defineProps<Product & {
+  defineProps<{
+    product: Product
     mode?: 'default' | 'remove'
     productAmount?: number
   }>(), {
@@ -68,11 +74,13 @@ const props = withDefaults(
 
 const amount = ref(1)
 const formatCurrency = (value: number) => useFormatCurrency(value)
-const summarizedPrice = computed(() => formatCurrency(props.price * amount.value))
+const summarizedPrice = computed(() => formatCurrency(props.product.price * amount.value))
 
 const cartStore = useCartStore()
+const isProductInCart = computed(() => cartStore.isInCart(props.product))
+
 const actionButtonState = ref<'default' | 'loading' | 'success' | 'remove'>(
-  props.mode === 'remove' ? 'remove' : 'default',
+  props.mode === 'remove' ? 'remove' : isProductInCart.value ? 'success' : 'default',
 )
 
 const handleAction = () => {
@@ -80,20 +88,24 @@ const handleAction = () => {
 }
 
 const addToCart = async () => {
-  const product = computed(() => ({ ...props, amount: amount.value }))
-
   try {
     actionButtonState.value = 'loading'
 
     await $fetch('/api/cart/add', {
       method: 'POST',
-      body: product.value,
+      body: {
+        ...props.product,
+        amount: amount.value,
+      },
     })
 
     actionButtonState.value = 'success'
-    cartStore.addToCart(product.value)
+    cartStore.addToCart({
+      ...props.product,
+      amount: amount.value,
+    })
 
-    console.log('Product added to cart successfully', props.name)
+    console.log('Product added to cart successfully', props.product.name)
   }
   catch (error) {
     console.error('Error adding product to cart:', error)
@@ -101,21 +113,22 @@ const addToCart = async () => {
 }
 
 const removeFromCart = async () => {
-  const product = computed(() => ({ ...props }))
-
   try {
     actionButtonState.value = 'loading'
 
     await $fetch('/api/cart/remove', {
       method: 'POST',
-      body: product.value,
+      body: {
+        ...props.product,
+        amount: amount.value,
+      },
     })
 
     actionButtonState.value = 'remove'
 
-    cartStore.removeFromCart(product.value)
+    cartStore.removeFromCart(props.product)
 
-    console.log('Product remove from cart successfully', props.name)
+    console.log('Product remove from cart successfully', props.product.name)
   }
   catch (error) {
     console.error('Error removing product from cart:', error)
