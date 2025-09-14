@@ -33,6 +33,7 @@
       <input
         v-model="amount"
         type="number"
+        min="1"
         class="w-20 px-3 py-2 text-sm hover:border hover:border-gray-300  rounded-md transition-colors duration-200 focus:outline-none focus:ring-0"
       >
     </div>
@@ -50,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted} from 'vue'
+import { onMounted } from 'vue'
 import ProductImage from '~/components/ProductImage.vue'
 import { useFormatCurrency } from '~/utils/use-format-currency'
 import { useCartStore } from '~/stores/cart'
@@ -66,7 +67,6 @@ const props = withDefaults(
   })
 
 const amount = ref(1)
-
 const formatCurrency = (value: number) => useFormatCurrency(value)
 const summarizedPrice = computed(() => formatCurrency(props.price * amount.value))
 

@@ -3,7 +3,6 @@
     <ProductsList
       v-if="products.length"
       :products="products"
-      title="Special Products"
       mode="remove"
     />
     <div

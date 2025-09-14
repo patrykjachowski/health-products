@@ -1,18 +1,18 @@
 <template>
   <div class="image-zoom-container mr-4 sm:mr-8">
     <NuxtImg
-        provider="prismic"
-        :src="image"
-        alt="Product image"
-        loading="lazy"
-        class="zoomed-image w-24 h-36 sm:w-16 sm:h-16"
+      provider="prismic"
+      :src="image"
+      alt="Product image"
+      loading="lazy"
+      class="zoomed-image w-24 h-36 sm:w-16 sm:h-16"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 defineProps<{
-  image: string;
+  image: string
 }>()
 </script>
 

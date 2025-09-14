@@ -6,11 +6,11 @@
         :is-pending="pending"
         title="Poznaj nasze specjalne oferty"
       />
-      <ProductsList
-        :products="originalProducts"
-        :is-pending="pending"
-        title="Poznaj nasze bestsellery"
-      />
+      <!--      <ProductsList -->
+      <!--        :products="originalProducts" -->
+      <!--        :is-pending="pending" -->
+      <!--        title="Poznaj nasze bestsellery" -->
+      <!--      /> -->
     </div>
   </div>
 </template>
