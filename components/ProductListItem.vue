@@ -30,7 +30,11 @@
       {{ formatCurrency(price) }}
     </div>
     <div class="hidden sm:flex items-center text-gray-700">
-      {{ amount }}
+      <input
+        v-model="amount"
+        type="number"
+        class="w-20 px-3 py-2 text-sm hover:border hover:border-gray-300  rounded-md transition-colors duration-200 focus:outline-none focus:ring-0"
+      >
     </div>
     <div class="hidden sm:flex items-center text-black font-bold">
       {{ summarizedPrice }}
@@ -46,6 +50,7 @@
 </template>
 
 <script setup lang="ts">
+import {onMounted} from 'vue'
 import ProductImage from '~/components/ProductImage.vue'
 import { useFormatCurrency } from '~/utils/use-format-currency'
 import { useCartStore } from '~/stores/cart'
@@ -54,14 +59,16 @@ import ProductListActionButton from '~/components/ProductListActionButton.vue'
 
 const props = withDefaults(
   defineProps<Product & {
-    amount?: number
     mode?: 'default' | 'remove'
+    productAmount?: number
   }>(), {
-    amount: 1,
     mode: 'default',
   })
+
+const amount = ref(1)
+
 const formatCurrency = (value: number) => useFormatCurrency(value)
-const summarizedPrice = formatCurrency(props.price * props.amount)
+const summarizedPrice = computed(() => formatCurrency(props.price * amount.value))
 
 const cartStore = useCartStore()
 const actionButtonState = ref<'default' | 'loading' | 'success' | 'remove'>(
@@ -73,7 +80,7 @@ const handleAction = () => {
 }
 
 const addToCart = async () => {
-  const product = computed(() => ({ ...props }))
+  const product = computed(() => ({ ...props, amount: amount.value }))
 
   try {
     actionButtonState.value = 'loading'
@@ -114,4 +121,10 @@ const removeFromCart = async () => {
     console.error('Error removing product from cart:', error)
   }
 }
+
+onMounted(() => {
+  if (props.productAmount !== undefined) {
+    amount.value = props.productAmount
+  }
+})
 </script>

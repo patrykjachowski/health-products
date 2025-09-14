@@ -13,5 +13,5 @@ export type MagentoProduct = {
 }
 
 export type Product = MagentoProduct & CmsProduct & {
-  special: boolean
+  amount: number
 }

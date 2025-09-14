@@ -16,6 +16,7 @@
         v-for="product in products"
         v-bind="product"
         :key="product.id"
+        :product-amount="product.amount"
         :mode="mode"
       />
     </ul>
