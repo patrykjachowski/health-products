@@ -1,16 +1,14 @@
 <template>
   <div class="container">
     <div class="p-4 sm:p-6 lg:p-8 font-sans">
-      <h1 class="text-3xl font-bold my-8 text-center">
-        Health Labs Cart
-      </h1>
-      <NuxtLink to="/cart">Cart</NuxtLink>
       <ProductsList
         :products="specialProducts"
+        :is-loading="pending"
         title="Special Products"
       />
       <ProductsList
         :products="originalProducts"
+        :is-loading="pending"
         title="Original Products"
       />
     </div>
@@ -18,7 +16,20 @@
 </template>
 
 <script setup lang="ts">
-const products = await $fetch('/api/product/products')
-const specialProducts = products.filter(product => product.special)
-const originalProducts = products.filter(product => !product.special)
+import type { Product } from '~/types/product'
+
+// TODO: handle error
+const {
+  data: products,
+  pending,
+  error,
+} = await useLazyFetch<Product[]>('/api/product/products')
+
+const specialProducts = computed(
+  () => products.value?.filter(product => product.special) ?? [],
+)
+
+const originalProducts = computed(
+  () => products.value?.filter(product => !product.special) ?? [],
+)
 </script>
