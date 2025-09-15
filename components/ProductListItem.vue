@@ -16,7 +16,6 @@
           <div class="sm:hidden text-black">
             Ilość -
             <input
-              v-if="mode !== 'remove'"
               v-model="amount"
               :disabled="isProductInCart"
               type="number"
