@@ -1,12 +1,10 @@
 <template>
-  <div class="container">
-    <div class="p-4 sm:p-6 lg:p-8 font-sans">
-      <ProductsList
-        :products="productsUpdated || []"
-        :is-pending="pending"
-        title="Poznaj nasze produkty"
-      />
-    </div>
+  <div class="sm:p-4 lg:p-8 font-sans">
+    <ProductsList
+      :products="productsUpdated || []"
+      :is-pending="pending"
+      title="Poznaj nasze produkty"
+    />
   </div>
 </template>
 
@@ -14,10 +12,7 @@
 import type { Product } from '~/types/product'
 
 // TODO: handle error
-const {
-  data: products,
-  pending,
-  error,
+const { data: products, pending,
 } = await useLazyFetch<Product[]>('/api/product/products')
 
 const { items: cartProducts } = useCartStore()

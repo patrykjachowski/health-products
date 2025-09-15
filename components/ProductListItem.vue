@@ -1,9 +1,8 @@
 <template>
   <!-- TODO: make a product list item component -->
   <!--  <li class="product-list-item"> -->
-  <li
-    class="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 rounded-xl bg-white p-4 text-gray-500 shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md"
-  >
+
+  <li class="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 rounded-xl bg-white p-4 text-gray-500 shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md">
     <div class="flex sm:items-center">
       <ProductImage :image="product.img" />
 
@@ -16,7 +15,14 @@
             Cena - {{ formatCurrency(product.price) }}
           </div>
           <div class="sm:hidden text-black">
-            Ilość - {{ amount }}
+            Ilość - <input
+              v-if="mode !== 'remove'"
+              v-model="amount"
+              :disabled="isProductInCart"
+              type="number"
+              min="1"
+              class="w-20 px-3 py-2 text-sm rounded-md transition-colors duration-200 focus:outline-none focus:ring-0 enabled:hover:border enabled:hover:border-gray-300"
+            >
           </div>
         </div>
 

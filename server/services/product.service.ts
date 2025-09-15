@@ -5,12 +5,12 @@ export class ProductService {
     const cached = await useStorage('cache').getItem('products')
     if (cached) return cached
 
-    const [cmsProducts, magentoProducts] = await Promise.all([
+    const [getCmsProducts, getMagentoProducts] = await Promise.all([
       $fetch('/api/cms/products'),
       $fetch('/api/magento/products'),
     ])
 
-    const products = this.mergeProducts(cmsProducts, magentoProducts)
+    const products = this.mergeProducts(getCmsProducts, getMagentoProducts)
     await useStorage('cache').setItem('products', products)
     return products
   }

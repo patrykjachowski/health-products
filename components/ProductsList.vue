@@ -1,16 +1,18 @@
 <template>
-  <h2 class="text-2xl text-center font-bold mt-8 mb-4">
+  <h2 class="hidden sm:block text-2xl text-center font-bold mt-8 mb-4">
     {{ title }}
   </h2>
-  <div v-if="isPending">
-    <!--    TODO: Make a skeleton loading component -->
-    LOADING
-  </div>
-  <div
-    v-else
-    class="mb-20"
-  >
+  <div class="mt-8 sm:mt-0 mb-20">
     <ProductsHeader />
+    <ul
+      v-if="isPending"
+      class="space-y-2 list-none"
+    >
+      <ProductListItemSkeleton
+        v-for="i in 10"
+        :key="i"
+      />
+    </ul>
     <ul class="space-y-2 list-none">
       <ProductListItem
         v-for="product in products"
@@ -18,6 +20,7 @@
         :product="product"
         :product-amount="product.amount"
         :mode="mode"
+        :is-pending="isPending"
       />
     </ul>
   </div>

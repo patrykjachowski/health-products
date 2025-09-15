@@ -1,9 +1,12 @@
 <template>
   <div class="border-b-2 border-gray-300">
     <div class="flex h-16 items-center justify-between">
-      <div class="text-xl font-bold text-gray-900">
+      <NuxtLink
+        to="/"
+        class="text-xl font-bold text-gray-900"
+      >
         Health Products
-      </div>
+      </NuxtLink>
 
       <div class="flex space-x-4 justify-end">
         <NuxtLink
@@ -13,9 +16,16 @@
           :class="getNavItemClass(item)"
           :aria-current="item.current ? 'page' : undefined"
         >
-          {{ item.name }}
+          <Icon
+            :name="item.icon"
+            class="sm:hidden"
+            size="20"
+          />
+          <span class="hidden sm:block">
+            {{ item.name }}
+          </span>
           <span v-if="item.name === 'Koszyk' && cartStore.totalItems > 0">
-            ({{ cartStore.totalItems }})
+            <sup>({{ cartStore.totalItems }})</sup>
           </span>
         </NuxtLink>
       </div>
@@ -31,8 +41,17 @@ const route = useRoute()
 const cartStore = useCartStore()
 
 const navigation = computed(() => [
-  { name: 'Lista produktów', href: '/', current: route.path === '/' },
-  { name: 'Koszyk', href: '/cart', current: route.path === '/cart' },
+  {
+    name: 'Lista produktów',
+    href: '/',
+    current: route.path === '/',
+    icon: 'material-symbols:event-list-outline-rounded',
+  },
+  { name: 'Koszyk',
+    href: '/cart',
+    current: route.path === '/cart',
+    icon: 'streamline-ultimate:shopping-cart-full-bold',
+  },
 ])
 
 const getNavItemClass = computed(() => {
@@ -40,7 +59,7 @@ const getNavItemClass = computed(() => {
     item.current
       ? 'bg-gray-700 text-white'
       : 'text-gray-700  hover:bg-gray-200',
-    'rounded-md px-3 py-2 text-sm font-medium',
+    'flex items-center rounded-md px-3 py-2 text-sm font-medium',
   ]
 })
 </script>
