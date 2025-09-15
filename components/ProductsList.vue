@@ -1,5 +1,5 @@
 <template>
-  <h2 class="hidden sm:block text-2xl text-center font-bold mt-8 mb-4">
+  <h2 class="text-2xl text-center font-bold mt-8 mb-4">
     {{ title }}
   </h2>
   <div class="mt-8 sm:mt-0 mb-20">

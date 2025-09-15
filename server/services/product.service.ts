@@ -24,21 +24,21 @@ export class ProductService {
         const dm = matching.find(mp => mp.sku.endsWith('_dm'))
         const regular = matching.find(mp => !mp.sku.endsWith('_dm'))
 
-        const selected = this.selectBestVariant(dm, regular)
-        return selected ? { ...cmsProduct, ...selected, amount: 1 } : null
+        const { selected, isSpecial } = this.selectBestVariant(dm, regular)
+        return selected ? { ...cmsProduct, ...selected, amount: 1, special: isSpecial || false } : null
       })
       .filter((product): product is Product => product !== null)
   }
 
-  private selectBestVariant(dm?: MagentoProduct, regular?: MagentoProduct): MagentoProduct | null {
+  private selectBestVariant(dm?: MagentoProduct, regular?: MagentoProduct): { selected: MagentoProduct | null, isSpecial: boolean } {
     if (dm && regular) {
-      if (dm.stock_status === 'IN_STOCK') return dm
-      if (regular.stock_status === 'IN_STOCK') return regular
-      return null
+      if (dm.stock_status === 'IN_STOCK') return { selected: dm, isSpecial: true }
+      if (regular.stock_status === 'IN_STOCK') return { selected: regular, isSpecial: false }
+      return { selected: null, isSpecial: false }
     }
 
-    if (regular?.stock_status === 'IN_STOCK') return regular
-    if (dm?.stock_status === 'IN_STOCK') return dm
-    return null
+    if (regular?.stock_status === 'IN_STOCK') return { selected: regular, isSpecial: false }
+    if (dm?.stock_status === 'IN_STOCK') return { selected: dm, isSpecial: true }
+    return { selected: null, isSpecial: false }
   }
 }
