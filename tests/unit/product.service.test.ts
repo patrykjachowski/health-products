@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ProductService } from '~/server/services/product.service'
-import type { CmsProduct, MagentoProduct } from '~/types/product'
+import type { CmsProduct, MagentoProduct, Product } from '~/types/product'
 
 describe('ProductService', () => {
   let productService: ProductService
@@ -23,6 +23,19 @@ describe('ProductService', () => {
     uid: 'test-1',
     sku: 'test_sku_pl',
     img: 'test.jpg',
+    ...overrides,
+  })
+
+  const createProduct = (overrides: Partial<Product> = {}): Product => ({
+    uid: 'test-1',
+    sku: 'test_sku_pl',
+    img: 'test.jpg',
+    id: 1,
+    name: 'Test Product',
+    stock_status: 'IN_STOCK',
+    price: 99.99,
+    amount: 1,
+    special: false,
     ...overrides,
   })
 
@@ -102,6 +115,125 @@ describe('ProductService', () => {
 
       expect(result2.selected).toBeNull()
       expect(result2.isSpecial).toBe(false)
+    })
+  })
+
+  describe('getBestVariantForCart', () => {
+    beforeEach(() => {
+      // Mock the API calls
+      vi.stubGlobal('$fetch', vi.fn())
+    })
+
+    it('should return DM variant when both are available and DM is in stock', async () => {
+      const baseProduct = createProduct({ sku: 'test_sku_pl', amount: 2 })
+      const cmsProducts = [createCmsProduct({ sku: 'test_sku_pl' })]
+      const magentoProducts = [
+        createMagentoProduct({ sku: 'test_sku_pl' }),
+        createMagentoProduct({ sku: 'test_sku_pl_dm', id: 2, price: 119.99 }),
+      ]
+
+      vi.mocked($fetch)
+        .mockResolvedValueOnce(cmsProducts)
+        .mockResolvedValueOnce(magentoProducts)
+
+      const result = await productService.getBestVariantForCart(baseProduct)
+
+      expect(result).toEqual({
+        uid: 'test-1',
+        sku: 'test_sku_pl_dm',
+        img: 'test.jpg',
+        id: 2,
+        name: 'Test Product',
+        stock_status: 'IN_STOCK',
+        price: 119.99,
+        amount: 2,
+        special: true,
+      })
+    })
+
+    it('should return regular variant when DM is out of stock', async () => {
+      const baseProduct = createProduct({ sku: 'test_sku_pl', amount: 1 })
+      const cmsProducts = [createCmsProduct({ sku: 'test_sku_pl' })]
+      const magentoProducts = [
+        createMagentoProduct({ sku: 'test_sku_pl' }),
+        createMagentoProduct({ sku: 'test_sku_pl_dm', id: 2, stock_status: 'OUT_OF_STOCK' }),
+      ]
+
+      vi.mocked($fetch)
+        .mockResolvedValueOnce(cmsProducts)
+        .mockResolvedValueOnce(magentoProducts)
+
+      const result = await productService.getBestVariantForCart(baseProduct)
+
+      expect(result).toEqual({
+        uid: 'test-1',
+        sku: 'test_sku_pl',
+        img: 'test.jpg',
+        id: 1,
+        name: 'Test Product',
+        stock_status: 'IN_STOCK',
+        price: 99.99,
+        amount: 1,
+        special: false,
+      })
+    })
+
+    it('should return null when no CMS product is found', async () => {
+      const baseProduct = createProduct({ sku: 'nonexistent_sku' })
+      const cmsProducts = [createCmsProduct({ sku: 'other_sku' })]
+      const magentoProducts = [createMagentoProduct({ sku: 'other_sku' })]
+
+      vi.mocked($fetch)
+        .mockResolvedValueOnce(cmsProducts)
+        .mockResolvedValueOnce(magentoProducts)
+
+      const result = await productService.getBestVariantForCart(baseProduct)
+
+      expect(result).toBeNull()
+    })
+
+    it('should return null when no variants are in stock', async () => {
+      const baseProduct = createProduct({ sku: 'test_sku_pl' })
+      const cmsProducts = [createCmsProduct({ sku: 'test_sku_pl' })]
+      const magentoProducts = [
+        createMagentoProduct({ sku: 'test_sku_pl', stock_status: 'OUT_OF_STOCK' }),
+        createMagentoProduct({ sku: 'test_sku_pl_dm', id: 2, stock_status: 'OUT_OF_STOCK' }),
+      ]
+
+      vi.mocked($fetch)
+        .mockResolvedValueOnce(cmsProducts)
+        .mockResolvedValueOnce(magentoProducts)
+
+      const result = await productService.getBestVariantForCart(baseProduct)
+
+      expect(result).toBeNull()
+    })
+
+    it('should handle base product with _dm suffix correctly', async () => {
+      const baseProduct = createProduct({ sku: 'test_sku_pl_dm', amount: 3 })
+      const cmsProducts = [createCmsProduct({ sku: 'test_sku_pl' })]
+      const magentoProducts = [
+        createMagentoProduct({ sku: 'test_sku_pl' }),
+        createMagentoProduct({ sku: 'test_sku_pl_dm', id: 2, price: 119.99 }),
+      ]
+
+      vi.mocked($fetch)
+        .mockResolvedValueOnce(cmsProducts)
+        .mockResolvedValueOnce(magentoProducts)
+
+      const result = await productService.getBestVariantForCart(baseProduct)
+
+      expect(result).toEqual({
+        uid: 'test-1',
+        sku: 'test_sku_pl_dm',
+        img: 'test.jpg',
+        id: 2,
+        name: 'Test Product',
+        stock_status: 'IN_STOCK',
+        price: 119.99,
+        amount: 3,
+        special: true,
+      })
     })
   })
 

@@ -1,12 +1,12 @@
 <template>
   <div class="sm:p-4 lg:p-8 font-sans">
     <ProductsList
-      :products="specialProductsUpdated || []"
+      :products="regularProductsUpdated || []"
       :is-pending="pending"
       title="Lista A"
     />
     <ProductsList
-      :products="regularProductsUpdated || []"
+      :products="specialProductsUpdated || []"
       :is-pending="pending"
       title="Lista B"
     />
@@ -32,10 +32,18 @@ const productsUpdated = computed(() => {
 })
 
 const specialProductsUpdated = computed(() => {
-  return productsUpdated.value?.filter(product => product.special) || []
+  return (
+    productsUpdated.value?.filter(
+      product => product.special && product.stock_status === 'IN_STOCK',
+    ) || []
+  )
 })
 
 const regularProductsUpdated = computed(() => {
-  return productsUpdated.value?.filter(product => !product.special) || []
+  return (
+    productsUpdated.value?.filter(
+      product => !product.special && product.stock_status === 'IN_STOCK',
+    ) || []
+  )
 })
 </script>

@@ -1,8 +1,7 @@
 <template>
-  <!-- TODO: make a product list item component -->
-  <!--  <li class="product-list-item"> -->
-
-  <li class="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 rounded-xl bg-white p-4 text-gray-500 shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md">
+  <li
+    class="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_1fr_auto] md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 rounded-xl bg-white p-4 text-gray-500 shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md"
+  >
     <div class="flex sm:items-center">
       <ProductImage :image="product.img" />
 
@@ -15,7 +14,8 @@
             Cena - {{ formatCurrency(product.price) }}
           </div>
           <div class="sm:hidden text-black">
-            Ilość - <input
+            Ilość -
+            <input
               v-if="mode !== 'remove'"
               v-model="amount"
               :disabled="isProductInCart"
@@ -74,19 +74,27 @@ const props = withDefaults(
     product: Product
     mode?: 'default' | 'remove'
     productAmount?: number
-  }>(), {
+  }>(),
+  {
     mode: 'default',
-  })
+  },
+)
 
 const amount = ref(1)
 const formatCurrency = (value: number) => useFormatCurrency(value)
-const summarizedPrice = computed(() => formatCurrency(props.product.price * amount.value))
+const summarizedPrice = computed(() =>
+  formatCurrency(props.product.price * amount.value),
+)
 
 const cartStore = useCartStore()
 const isProductInCart = computed(() => cartStore.isInCart(props.product))
 
 const actionButtonState = ref<'default' | 'loading' | 'success' | 'remove'>(
-  props.mode === 'remove' ? 'remove' : isProductInCart.value ? 'success' : 'default',
+  props.mode === 'remove'
+    ? 'remove'
+    : isProductInCart.value
+      ? 'success'
+      : 'default',
 )
 
 const handleAction = () => {
@@ -97,7 +105,7 @@ const addToCart = async () => {
   try {
     actionButtonState.value = 'loading'
 
-    await $fetch('/api/cart/add', {
+    const response = await $fetch('/api/cart/add', {
       method: 'POST',
       body: {
         ...props.product,
@@ -105,16 +113,15 @@ const addToCart = async () => {
       },
     })
 
-    actionButtonState.value = 'success'
-    cartStore.addToCart({
-      ...props.product,
-      amount: amount.value,
-    })
+    // Use the best variant returned from the API
+    cartStore.addToCart(response.product)
 
-    console.log('Product added to cart successfully', props.product.name)
+    actionButtonState.value = 'success'
+    console.log('Product added to cart successfully', response.product.name)
   }
   catch (error) {
     console.error('Error adding product to cart:', error)
+    actionButtonState.value = 'default'
   }
 }
 
