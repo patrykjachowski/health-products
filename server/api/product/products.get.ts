@@ -7,7 +7,10 @@ export default defineEventHandler(async () => {
     return await productService.getProducts()
   }
   catch (error) {
-    console.error('Error fetching products:', error)
+    // Log error in development
+    if (import.meta.dev) {
+      console.error('Error fetching products:', error)
+    }
 
     throw createError({
       statusCode: 500,

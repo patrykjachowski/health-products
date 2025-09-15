@@ -4,16 +4,24 @@ import { defineStore } from 'pinia'
 export const useCartStore = defineStore('cart', () => {
   const items = ref<Product[]>([])
 
-  const totalItems = computed(() => items.value.length)
+  const totalItems = computed(() =>
+    items.value.reduce((sum, item) => sum + item.amount, 0),
+  )
 
   const totalPrice = computed(() =>
-    items.value.reduce((sum, item) => sum + item.price, 0),
+    items.value.reduce((sum, item) => sum + (item.price * item.amount), 0),
   )
+
+  // Helper function to normalize SKU for comparison
+  const normalizeSku = (sku: string) => sku.replace('_dm', '')
+
+  // Helper function to check if two products are the same (ignoring DM suffix)
+  const isSameProduct = (sku1: string, sku2: string) =>
+    normalizeSku(sku1) === normalizeSku(sku2)
 
   const addToCart = (product: Product) => {
     const existingItemIndex = items.value.findIndex(item =>
-      item.sku === product.sku
-      || (item.sku.includes(product.sku.replace('_dm', '')) && product.sku.includes(item.sku.replace('_dm', ''))),
+      isSameProduct(item.sku, product.sku),
     )
 
     if (existingItemIndex > -1) {
@@ -25,17 +33,14 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   const removeFromCart = (product: Product) => {
-    const index = items.value.findIndex(item => item.sku === product.sku)
+    const index = items.value.findIndex(item => isSameProduct(item.sku, product.sku))
     if (index > -1) {
       items.value.splice(index, 1)
     }
   }
 
   const isInCart = (product: Product) => {
-    return items.value.some(item =>
-      item.sku === product.sku
-      || (item.sku.includes(product.sku.replace('_dm', '')) && product.sku.includes(item.sku.replace('_dm', ''))),
-    )
+    return items.value.some(item => isSameProduct(item.sku, product.sku))
   }
 
   const clearCart = () => {

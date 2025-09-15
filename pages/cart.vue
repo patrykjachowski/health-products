@@ -56,7 +56,8 @@
     </div>
     <NuxtLink
       to="/"
-      class="rounded-md p-3 text-sm font-medium bg-gray-700 text-white"
+      class="rounded-md p-3 text-sm font-medium bg-gray-700 text-white hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+      aria-label="Przejdź do strony głównej aby rozpocząć zakupy"
     >Rozpocznij zakupy</NuxtLink>
   </div>
 </template>

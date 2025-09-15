@@ -21,7 +21,8 @@
               :disabled="isProductInCart"
               type="number"
               min="1"
-              class="w-20 px-3 py-2 text-sm rounded-md transition-colors duration-200 focus:outline-none focus:ring-0 enabled:hover:border enabled:hover:border-gray-300"
+              :aria-label="`Ilość produktu ${product.name}`"
+              class="w-20 px-3 py-2 text-sm rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 enabled:hover:border enabled:hover:border-gray-300"
             >
           </div>
         </div>
@@ -42,7 +43,8 @@
         :disabled="isProductInCart"
         type="number"
         min="1"
-        class="w-20 px-3 py-2 text-sm rounded-md transition-colors duration-200 focus:outline-none focus:ring-0 enabled:hover:border enabled:hover:border-gray-300"
+        :aria-label="`Ilość produktu ${product.name}`"
+        class="w-20 px-3 py-2 text-sm rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 enabled:hover:border enabled:hover:border-gray-300"
       >
       <span v-else>
         {{ amount }}
@@ -65,6 +67,7 @@
 import { onMounted } from 'vue'
 import ProductImage from '~/components/ProductImage.vue'
 import { useFormatCurrency } from '~/utils/use-format-currency'
+import { useErrorHandler } from '~/utils/use-error-handler'
 import { useCartStore } from '~/stores/cart'
 import type { Product } from '~/types/product'
 import ProductListActionButton from '~/components/ProductListActionButton.vue'
@@ -87,6 +90,7 @@ const summarizedPrice = computed(() =>
 )
 
 const cartStore = useCartStore()
+const { handleError } = useErrorHandler()
 const isProductInCart = computed(() => cartStore.isInCart(props.product))
 
 const actionButtonState = ref<'default' | 'loading' | 'success' | 'remove'>(
@@ -117,10 +121,9 @@ const addToCart = async () => {
     cartStore.addToCart(response.product)
 
     actionButtonState.value = 'success'
-    console.log('Product added to cart successfully', response.product.name)
   }
   catch (error) {
-    console.error('Error adding product to cart:', error)
+    handleError(error, 'Adding product to cart')
     actionButtonState.value = 'default'
   }
 }
@@ -140,11 +143,9 @@ const removeFromCart = async () => {
     actionButtonState.value = 'remove'
 
     cartStore.removeFromCart(props.product)
-
-    console.log('Product remove from cart successfully', props.product.name)
   }
   catch (error) {
-    console.error('Error removing product from cart:', error)
+    handleError(error, 'Removing product from cart')
   }
 }
 

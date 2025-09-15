@@ -41,7 +41,11 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error) {
-    console.error('Error adding product to cart:', error)
+    // Log error in development
+    if (import.meta.dev) {
+      console.error('Error adding product to cart:', error)
+    }
+
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to add product to cart',

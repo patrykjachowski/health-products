@@ -3,7 +3,7 @@
     <NuxtImg
       provider="prismic"
       :src="image"
-      alt="Product image"
+      :alt="`Zdjęcie produktu`"
       loading="lazy"
       class="zoomed-image w-24 h-36 sm:w-16 sm:h-16"
     />

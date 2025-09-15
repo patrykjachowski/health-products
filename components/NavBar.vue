@@ -4,6 +4,7 @@
       <NuxtLink
         to="/"
         class="text-xl font-bold text-gray-900"
+        aria-label="Przejdź do strony głównej"
       >
         Health Products
       </NuxtLink>
@@ -15,6 +16,7 @@
           :to="item.href"
           :class="getNavItemClass(item)"
           :aria-current="item.current ? 'page' : undefined"
+          :aria-label="`Przejdź do ${item.name}`"
         >
           <Icon
             :name="item.icon"

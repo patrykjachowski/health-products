@@ -3,6 +3,7 @@
     class="cart-button flex items-center justify-center"
     :class="{ 'cart-button-success': state === 'success' }"
     :disabled="isDisabled"
+    :aria-label="getAriaLabel()"
     @click="$emit('click')"
   >
     <Icon
@@ -23,6 +24,20 @@ defineEmits<{
 }>()
 
 const isDisabled = computed(() => ['loading', 'success'].includes(props.state))
+
+const getAriaLabel = () => {
+  switch (props.state) {
+    case 'loading':
+      return 'Dodawanie do koszyka...'
+    case 'success':
+      return 'Produkt dodany do koszyka'
+    case 'remove':
+      return 'Usuń z koszyka'
+    default:
+      return 'Dodaj do koszyka'
+  }
+}
+
 const iconConfig = computed(() => {
   switch (props.state) {
     case 'loading':
