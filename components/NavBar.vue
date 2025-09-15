@@ -33,21 +33,29 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+
+type NavigationItem = {
+  name: string
+  href: string
+  current: boolean
+  icon: string
+}
 
 const route = useRoute()
 const cartStore = useCartStore()
 
-const navigation = computed(() => [
+const navigation = computed((): NavigationItem[] => [
   {
     name: 'Lista produktów',
     href: '/',
     current: route.path === '/',
     icon: 'material-symbols:event-list-outline-rounded',
   },
-  { name: 'Koszyk',
+  {
+    name: 'Koszyk',
     href: '/cart',
     current: route.path === '/cart',
     icon: 'streamline-ultimate:shopping-cart-full-bold',
@@ -55,7 +63,7 @@ const navigation = computed(() => [
 ])
 
 const getNavItemClass = computed(() => {
-  return item => [
+  return (item: NavigationItem) => [
     item.current
       ? 'bg-gray-700 text-white'
       : 'text-gray-700  hover:bg-gray-200',
